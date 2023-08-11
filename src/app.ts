@@ -1,6 +1,6 @@
 // @ts-nocheck
 import axios from 'axios';
-import { ChannelType, Client, IntentsBitField, TextChannel } from 'discord.js';
+import { ChannelType, Client, IntentsBitField, Message, TextChannel } from 'discord.js';
 import 'dotenv/config';
 
 const client = new Client({ intents: [IntentsBitField.Flags.Guilds, IntentsBitField.Flags.GuildMessages, IntentsBitField.Flags.DirectMessages] });
@@ -22,32 +22,22 @@ client.on("messageCreate", async (message) => {
   switch (guildId) {
     case '899867212309987378':
       const response = await getChat(removeID(content), 'balancer');
-      
-        // send message to user in thread
-        const threadChannel = await message.startThread({
-          name: 'docIT Answer',
-          autoArchiveDuration: 60,
-          type: ChannelType.PrivateThread,
-          message: { content: response.answer },
-          reason: 'Needed a separate thread for documentation',
-        });
-        threadChannel.members.add(message.author);
-        threadChannel.send(response.answer);
-        //TODO: respond to user with follow up questions here.
+      // send message to user in thread
+      setMessageToThreads(message, response)
+      //TODO: respond to user with follow up questions here.
   }
 });
 
-const setMessageToThreads = (channelID: string, member: string, content: string) => {
-  (client.channels.cache.get(channelID)as TextChannel).send(`content: ${content}`)
-  //@ts-ignore
-  // const thread = channel?.threads.create({
-  //   name: 'docIT-question',
-  //   autoArchiveDuration: 60,
-  //   type: ChannelType.PrivateThread,
-  //   message: { content },
-  //   reason: 'Needed a separate thread for documentation',
-  // });
-  // thread.members.add(member)
+const setMessageToThreads = async (message: Message, response: any) => {
+    const threadChannel = await message.startThread({
+      name: 'docIT',
+      autoArchiveDuration: 60,
+      type: ChannelType.PrivateThread,
+      message: { content: response.answer },
+      reason: 'separate thread for documentation',
+    });
+    threadChannel.members.add(message.author);
+    threadChannel.send(response.answer);
 }
 
 const getChat = async (question: string, projectID: string): Promise<JSON | unknown> => {
