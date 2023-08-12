@@ -8,11 +8,13 @@ const client = new Client({ intents: [IntentsBitField.Flags.Guilds, IntentsBitFi
 const removeID = (inputString: string) => inputString.replace(/<@\d+>/g, '').trim();
 
 const setMessageToThreads = async (message: Message, response: any) => {
+  const content = splitIntoMarkdownParagraphs(response.answer);
+  console.log('content: ', content);
   const threadChannel = await message.startThread({
     name: 'docIT',
     autoArchiveDuration: 60,
     type: ChannelType.PrivateThread,
-    message: { content: splitIntoMarkdownParagraphs(response.answer) },
+    message: { content },
     reason: 'separate thread for documentation',
   });
   threadChannel.members.add(message.author);
