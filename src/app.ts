@@ -18,7 +18,7 @@ const removeID = (inputString: string) => inputString.replace(/<@\d+>/g, '').tri
 client.on("messageCreate", async (message) => {
   const { guildId, content, author } = message;
 
-  if (!content.length || message.author.bot || message.author.id === '1138959598536097842') return
+  if (!content.length || message.author.bot || message.author.id === process.env.DISCORD_BOT_ID) return
   switch (guildId) {
     case '899867212309987378':
       const response = await getChat(removeID(content), 'balancer');
