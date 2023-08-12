@@ -2,32 +2,10 @@
 import axios from 'axios';
 import { ChannelType, Client, IntentsBitField, Message } from 'discord.js';
 import 'dotenv/config';
+import splitIntoMarkdownParagraphs from './textTool.js';
 
 const client = new Client({ intents: [IntentsBitField.Flags.Guilds, IntentsBitField.Flags.GuildMessages, IntentsBitField.Flags.DirectMessages] });
-
-client.once('ready', (c) => {
-	console.log(`Ready! Logged in as ${c.user.tag}`);
-});
-
-client.on('interactionCreate', interaction => {
-  console.log(interaction);
-});
-
 const removeID = (inputString: string) => inputString.replace(/<@\d+>/g, '').trim();
-
-client.on("messageCreate", async (message) => {
-  const { guildId, content, author } = message;
-  console.log('message heard!', JSON.stringify(message));
-
-  if (!content.length || message.author.bot || message.author.id === process.env.DISCORD_BOT_ID) return
-  switch (guildId) {
-    case '899867212309987378':
-      const response = await getChat(removeID(content), 'balancer');
-      // send message to user in thread
-      setMessageToThreads(message, response)
-    //TODO: respond to user with follow up questions here.
-  }
-});
 
 const setMessageToThreads = async (message: Message, response: any) => {
   const threadChannel = await message.startThread({
@@ -40,6 +18,26 @@ const setMessageToThreads = async (message: Message, response: any) => {
   threadChannel.members.add(message.author);
   threadChannel.send(response.answer);
 }
+
+client.once('ready', (c) =>	console.log(`Ready! Logged in as ${c.user.tag}`));
+
+/*
+client.on('interactionCreate', interaction => {
+  console.log(interaction);
+});
+*/
+
+client.on("messageCreate", async (message) => {
+  const { guildId, content, author } = message;
+  if (!content.length || author.bot || author.id === process.env.DISCORD_BOT_ID) return
+  switch (guildId) {
+    case '899867212309987378': // TODO: Move this to a db function to return valid variables here
+      const response = await getChat(removeID(content), 'balancer');
+      // send message to user in thread
+      setMessageToThreads(message, splitIntoMarkdownParagraphs(response))
+    //TODO: respond to user with follow up questions here.
+  }
+});
 
 const getChat = async (question: string, projectID: string): Promise<JSON | unknown> => {
   const getResponse = await axios.get(`${process.env.DOCIT_INFRA}/questions`, { data: { question, projectID }, auth: { username: 'admin', password: process.env.DOCIT_AUTH } });
