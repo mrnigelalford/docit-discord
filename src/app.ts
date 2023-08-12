@@ -12,7 +12,7 @@ const setMessageToThreads = async (message: Message, response: any) => {
     name: 'docIT',
     autoArchiveDuration: 60,
     type: ChannelType.PrivateThread,
-    message: { content: response.answer },
+    message: { content: splitIntoMarkdownParagraphs(response.answer) },
     reason: 'separate thread for documentation',
   });
   threadChannel.members.add(message.author);
@@ -34,7 +34,7 @@ client.on("messageCreate", async (message) => {
     case '899867212309987378': // TODO: Move this to a db function to return valid variables here
       const response = await getChat(removeID(content), 'balancer');
       // send message to user in thread
-      setMessageToThreads(message, splitIntoMarkdownParagraphs(response))
+      setMessageToThreads(message, response)
     //TODO: respond to user with follow up questions here.
   }
 });
