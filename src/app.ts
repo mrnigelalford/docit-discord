@@ -5,7 +5,7 @@ import 'dotenv/config';
 
 const client = new Client({ intents: [IntentsBitField.Flags.Guilds, IntentsBitField.Flags.GuildMessages, IntentsBitField.Flags.DirectMessages] });
 
-client.once('ready', () => {
+client.once('ready', (c) => {
 	console.log(`Ready! Logged in as ${c.user.tag}`);
 });
 
