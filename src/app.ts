@@ -1,12 +1,12 @@
 // @ts-nocheck
 import axios from 'axios';
-import { ChannelType, Client, IntentsBitField, Message, TextChannel } from 'discord.js';
+import { ChannelType, Client, IntentsBitField, Message } from 'discord.js';
 import 'dotenv/config';
 
 const client = new Client({ intents: [IntentsBitField.Flags.Guilds, IntentsBitField.Flags.GuildMessages, IntentsBitField.Flags.DirectMessages] });
 
 client.once('ready', () => {
-  console.log('Ready!');
+	console.log(`Ready! Logged in as ${c.user.tag}`);
 });
 
 client.on('interactionCreate', interaction => {
