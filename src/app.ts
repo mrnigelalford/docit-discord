@@ -17,6 +17,7 @@ const removeID = (inputString: string) => inputString.replace(/<@\d+>/g, '').tri
 
 client.on("messageCreate", async (message) => {
   const { guildId, content, author } = message;
+  console.log('message heard!', JSON.stringify(message));
 
   if (!content.length || message.author.bot || message.author.id === process.env.DISCORD_BOT_ID) return
   switch (guildId) {
