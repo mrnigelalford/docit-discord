@@ -28,9 +28,8 @@ client.on('messageCreate', async (message) => {
       const response = await getChat(removeID(content), 'balancer');
 
       // Check if the message is in a thread
-      if (message.thread) {
-        // Send response in the same thread
-        message.thread.send(response.answer);
+      if (message.position) {
+        message.reply(response.answer);
       } else {
         // Send response in a new thread
         const threadChannel = await message.startThread({
