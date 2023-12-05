@@ -26,22 +26,23 @@ client.on('messageCreate', async (message) => {
   switch (guildId) {
     case '899867212309987378': // TODO: Move this to a db function to return valid variables here
       const response = await getChat(removeID(content), 'sui');
+      const clean = JSON.parse(response.answer).choices[0].message.content.replace(/\n/g, " ")
 
       // Check if the message is in a thread
       if (message.position) {
-        message.reply(response.answer);
+        message.reply(clean);
       } else {
         // Send response in a new thread
         const threadChannel = await message.startThread({
           name: 'Response Thread',
           autoArchiveDuration: 1440, // Set the auto-archive duration as needed
           type: ChannelType.PrivateThread,
-          startMessage: response.answer,
+          startMessage: clean,
           reason: 'separate thread for documentation',
         });
 
         threadChannel.members.add(message.author);
-        threadChannel.send(response.answer);
+        threadChannel.send(clean);
       }
       break;
   }
