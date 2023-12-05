@@ -25,7 +25,7 @@ client.on('messageCreate', async (message) => {
 
   switch (guildId) {
     case '899867212309987378': // TODO: Move this to a db function to return valid variables here
-      const response = await getChat(removeID(content), 'balancer');
+      const response = await getChat(removeID(content), 'sui');
 
       // Check if the message is in a thread
       if (message.position) {
