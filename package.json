@@ -5,8 +5,10 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "npx tsc && node dist/app.js",
+    "start": "node dist/app.js",
     "build": "npm ci",
+    "gcp-build":"tsc",
+    "deploy": "gcloud app deploy",
     "build:digitalocean": "npm install --production=false && npm run build && npm ci"
   },
   "author": "nigel alford",
