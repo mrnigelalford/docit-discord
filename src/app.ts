@@ -41,9 +41,9 @@ client.on('messageCreate', async (message) => {
   let modifiedContent = content;
 
   // Check if the content string does not contain 'in SUI', and append it if necessary
-  if (!content.includes('in SUI')) {
-    modifiedContent = `${content} in SUI`;
-  }
+  // if (!content.includes('in SUI')) {
+  //   modifiedContent = `${content} in SUI`;
+  // }
 
   const response = await getChat(removeID(modifiedContent), 'sui');
   if (!response || typeof response.answer !== 'string') return;
