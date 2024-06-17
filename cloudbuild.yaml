@@ -24,7 +24,7 @@ steps:
 
 - name: 'node'
   entrypoint: 'npm'
-  args: ['run', 'build']
+  args: ['run', 'gcp-build']
   dir: 'src'
 
 # Build the container image
