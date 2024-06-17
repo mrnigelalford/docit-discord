@@ -1,0 +1,49 @@
+steps:
+
+- name: 'node'
+  entrypoint: 'npm'
+  args: ['install']
+  dir: 'src'
+
+- name: 'node'
+  entrypoint: 'npm'
+  args: ['install', 'typescript', '-g']
+  dir: 'src'
+
+# - name: 'node'
+#   entrypoint: 'npm'
+#   args: ["run", "create-env"]
+#   dir: 'src'
+#   env:
+#   - 'GCLOUD_STORAGE_BUCKET=${_GCLOUD_STORAGE_BUCKET}'
+#   - 'MONGODB_URI=${_MONGODB_URI}'
+#   - 'PROJECT_ID=${_PROJECT_ID}'
+#   - 'PORT=${_PORT}'
+#   - 'NODE_ENV=${_NODE_ENV}'
+#   - 'LOCATION=${_LOCATION}'
+
+- name: 'node'
+  entrypoint: 'npm'
+  args: ['run', 'build']
+  dir: 'src'
+
+# Build the container image
+- name: 'gcr.io/cloud-builders/docker'
+  args: [
+    'build',
+    '-t', 'us-east1-docker.pkg.dev/docit-395617/docit:$SHORT_SHA',
+    '.',
+    '-f', 'Dockerfile'
+  ]
+
+- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  entrypoint: 'gcloud'
+  args: [
+    'compute', 'instances', 'update-container', 'docit-discord',
+    '--zone=us-useast1-a',
+    '--container-image=us-east1-docker.pkg.dev/docit-395617/docit:$SHORT_SHA',
+    '--container-restart-policy=always',
+  ]
+
+images:
+- 'us-east1-docker.pkg.dev/docit-395617/docit:$SHORT_SHA'
